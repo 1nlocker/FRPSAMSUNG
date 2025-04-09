@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Samsung FRP Support - Consulta Rápida</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #1e88e5;
+            --secondary-color: #0d47a1;
+            --success-color: #4caf50;
+            --danger-color: #f44336;
+            --light-color: #f5f5f5;
+            --dark-color: #212121;
+            --gray-color: #757575;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .header-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .logo {
+            margin-bottom: 15px;
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            opacity: 0.9;
+        }
+        
+        .search-bar {
+            width: 100%;
+            max-width: 600px;
+            position: relative;
+            margin-bottom: 10px;
+        }
+        
+        .search-bar input {
+            width: 100%;
+            padding: 12px 45px 12px 15px;
+            border-radius: 25px;
+            border: none;
+            font-size: 1rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .search-bar input:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px var(--primary-color);
+        }
+        
+        .search-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary-color);
+        }
+        
+        .filter-stats {
+            margin: 15px 0;
+            font-size: 1rem;
+            color: var(--gray-color);
+        }
+        
+        main {
+            padding: 30px 0;
+        }
+        
+        .device-table-container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        thead {
+            background-color: #f1f3f5;
+        }
+        
+        th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--dark-color);
+            border-bottom: 2px solid #e9ecef;
+        }
+        
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .stats-bar {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 8px 0;
+            font-size: 0.9rem;
+        }
+        
+        .stats-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .stat-item {
+            display: flex;
+            align-items: center;
+        }
+        
+        .stat-item i {
+            margin-right: 8px;
+            color: var(--success-color);
+        }
+        
+        .online-pulse {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background-color: var(--success-color);
+            border-radius: 50%;
+            margin-right: 8px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 0.5; }
+            50% { opacity: 1; }
+            100% { opacity: 0.5; }
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            background-color: rgba(255, 255, 255, 0.2);
+            margin-left: 5px;
+            font-size: 0.8rem;
+        }
+        
+        .whatsapp-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--success-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+        
+        .whatsapp-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .service-info {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .service-info h2 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+        
+        .service-info p {
+            margin-bottom: 10px;
+        }
+        
+        .description-box {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .description-box h3 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+        
+        .description-box h4 {
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+        
+        .description-box p {
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+        
+        .description-box ol {
+            padding-left: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .description-box li {
+            margin-bottom: 10px;
+        }
+        
+        .highlight-box {
+            background-color: #e8f5e9;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+            text-align: center;
+            border: 1px solid #c8e6c9;
+        }
+        
+        .highlight-box i {
+            font-size: 2rem;
+            color: var(--success-color);
+            margin-bottom: 10px;
+        }
+        
+        .highlight-box h4 {
+            color: var(--success-color);
+            margin-bottom: 10px;
+        }
+        
+        .contact-button {
+            display: inline-block;
+            background-color: var(--success-color);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        
+        .contact-button:hover {
+            background-color: #43a047;
+            transform: translateY(-2px);
+        }
+        
+        footer {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .loading i {
+            font-size: 2rem;
+            color: var(--primary-color);
+            animation: spin 1s infinite linear;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .not-found {
+            display: none;
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--gray-color);
+        }
+        
+        .not-found i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: var(--gray-color);
+        }
+        
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 2rem;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
+            }
+            
+            th, td {
+                padding: 10px;
+            }
+            
+            .device-table-container {
+                overflow-x: auto;
+            }
+            
+            .highlight-card {
+                min-width: 100%;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .logo {
+                font-size: 1.8rem;
+            }
+            
+            th, td {
+                padding: 8px 5px;
+                font-size: 0.9rem;
+            }
+            
+            .status {
+                width: 60px;
+                padding: 3px 5px;
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">Samsung FRP Support</div>
+                <div class="subtitle">Consulta rápida e desbloqueio em minutos</div>
+                <div class="search-bar">
+                    <input type="text" id="searchInput" placeholder="Buscar modelo, série ou variante..." autocomplete="off" autofocus>
+                    <i class="fas fa-search search-icon"></i>
+                </div>
+                <div class="filter-stats">Mostrando <span id="itemCount">0</span> de <span id="totalCount">0</span> modelos</div>
+            </div>
+        </div>
+    </header>
+    
+    <main class="container">
+        <div class="service-info">
+            <h2>Desbloqueio FRP Samsung Via IMEI</h2>
+            <p>Oferecemos serviço ultrarrápido de desbloqueio FRP para dispositivos Samsung. Nosso processo é 100% remoto, feito via IMEI, sem necessidade de enviar o aparelho e com tempo de execução entre 1 a 10 minutos!</p>
+            
+            <div class="description-box">
+                <h3>O que é FRP e por que você precisa do nosso serviço?</h3>
+                <p>FRP (Factory Reset Protection) é um sistema de segurança da Samsung que impede o uso do dispositivo após uma restauração de fábrica, solicitando a conta Google anteriormente cadastrada. Se você esqueceu sua senha, comprou um aparelho usado ou resetou seu dispositivo, pode ficar bloqueado nesta tela.</p>
+                
+                <p>Nosso serviço oferece o desbloqueio oficial e permanente do FRP do seu Samsung, permitindo que você configure o aparelho com uma nova conta Google sem restrições.</p>
+                
+                <h3>Como funciona nosso processo:</h3>
+                <ol>
+                    <li><strong>Consulte seu modelo</strong> - Use nossa ferramenta de busca acima para verificar se seu Samsung tem suporte</li>
+                    <li><strong>Entre em contato</strong> - Clique em "Fazer Pedido" e envie o IMEI do seu aparelho via WhatsApp</li>
+                    <li><strong>Pagamento</strong> - Receba as instruções de pagamento (aceitamos PIX, cartões e outros métodos)</li>
+                    <li><strong>Desbloqueio rápido</strong> - Em apenas 1 a 10 minutos seu aparelho será desbloqueado remotamente</li>
+                    <li><strong>Instruções</strong> - Receba as instruções de configuração e pronto! Seu Samsung estará liberado</li>
+                </ol>
+                
+                <h3>Por que escolher nosso serviço:</h3>
+                <div class="service-highlights">
+                    <div class="highlight-card">
+                        <i class="fas fa-bolt"></i>
+                        <span>Desbloqueio em 1 a 10 minutos</span>
+                    </div>
+                    <div class="highlight-card">
+                        <i class="fas fa-lock-open"></i>
+                        <span>Suporte para mais de 470 modelos</span>
+                    </div>
+                    <div class="highlight-card">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Processo seguro e garantido</span>
+                    </div>
+                    <div class="highlight-card">
+                        <i class="fas fa-comments"></i>
+                        <span>Atendimento via WhatsApp</span>
+                    </div>
+                </div>
+                
+                <div class="highlight-box">
+                    <i class="fas fa-shield-alt"></i>
+                    <h4>100% SEGURO E LEGAL</h4>
+                    <p>Nosso método de desbloqueio é oficial, não danifica seu dispositivo e não viola garantias. Trabalhamos apenas com aparelhos de proprietários legítimos.</p>
+                </div>
+            </div>
+            
+            <a href="https://wa.me/5534991049663?text=Ol%C3%A1!%20Estou%20com%20meu%20Samsung%20travado%20na%20conta%20Google.%20Gostaria%20de%20solicitar%20o%20desbloqueio%20FRP%20via%20IMEI.%20Sei%20que%20fica%20pronto%20em%20at%C3%A9%2010%20min!" class="contact-button" target="_blank">
+                <i class="fab fa-whatsapp"></i> Fazer Pedido
+            </a>
+        </div>
+        
+        <div class="device-table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Modelo</th>
+                        <th>Variante</th>
+                        <th>Suporte</th>
+                    </tr>
+                </thead>
+                <tbody id="deviceTableBody">
+                    <!-- Table content will be populated by JavaScript -->
+                </tbody>
+            </table>
+            
+            <div class="loading" id="loadingIndicator">
+                <i class="fas fa-spinner"></i>
+                <p>Carregando dados...</p>
+            </div>
+            
+            <div class="not-found" id="notFoundMessage">
+                <i class="fas fa-search"></i>
+                <h3>Nenhum modelo encontrado</h3>
+                <p>Tente uma busca diferente ou entre em contato para verificar se podemos ajudar com seu modelo.</p>
+            </div>
+        </div>
+    </main>
+    
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Samsung FRP Unlock Service - Todos os direitos reservados</p>
+        </div>
+    </footer>
+    
+    <button class="whatsapp-button" id="whatsappButton">
+        <i class="fab fa-whatsapp"></i>
+    </button>
+
+    <script>
+        // Device data
+        const deviceData = [
+            {model: "Galaxy S25", variant: "SM-S931BE", support: "YES"},
+            {model: "Galaxy S25 Ultra", variant: "SM-S938BE, SM-S938N, SM-S938U", support: "YES"},
+            {model: "Galaxy S25+", variant: "SM-S936BE", support: "YES"},
+            {model: "Galaxy A04s", variant: "SM-A047M, SM-A047F", support: "YES"},
+            {model: "Galaxy A06", variant: "SM-A065M, SM-A065F", support: "YES"},
+            {model: "Galaxy A13", variant: "SM-A137F, SM-A135N, SM-A135M, SM-A135F, SM-A135U1, SM-A135U", support: "YES"},
+            {model: "Galaxy A13 5G", variant: "SM-A136M, SM-A136B, SM-A136S", support: "YES"},
+            {model: "Galaxy A14", variant: "SM-A145MB, SM-A145FB", support: "YES"},
+            {model: "Galaxy A15", variant: "SM-A155F, SM-A155M, SM-A155N", support: "YES"},
+            {model: "Galaxy A15 5G", variant: "SM-A1560, SM-A156E, SM-A156M, SM-S156V, SM-A156U, SM-A156W, SM-A156U1, SM-A156B, SM-A156L", support: "YES"},
+            {model: "Galaxy A16", variant: "SM-A165M, SM-A165F, SM-A165N", support: "YES"},
+            {model: "Galaxy A16 5G", variant: "SM-A166M, SM-A1660, SM-A166E, SM-A166P, SM-A166B, SM-S166V, SM-A166U1, SM-A166U, SM-A166W", support: "YES"},
+            {model: "Galaxy A23", variant: "SM-A235F, SM-A235M, SM-A235N", support: "YES"},
+            {model: "Galaxy A23 5G", variant: "SM-A2360, SM-A236B, SM-A236M, SM-A236E, SM-A236V, SM-A236U1, SM-S236DL, SM-A236U, SM-S237VL", support: "YES"},
+            {model: "Galaxy A23e 5G", variant: "SC-56C, SM-A233C, SCG18", support: "YES"},
+            {model: "Galaxy A24", variant: "SM-A245M, SM-A245F, SM-A245N", support: "YES"},
+            {model: "Galaxy A25 5G", variant: "SM-A2560, SM-A256N, SM-A256E, SM-S256VL, SM-A256U1, SM-A256U, SM-A256B", support: "YES"},
+            {model: "Galaxy A33 5G", variant: "SM-A336B, SM-A3360, SM-A336M, SM-A336N, SM-A336E", support: "YES"},
+            {model: "Galaxy A34 5G", variant: "SM-A346B, SM-A346M, SM-A3460, SM-A346N, SM-A346E", support: "YES"},
+            {model: "Galaxy A35 5G", variant: "SM-A356B, SM-A356E, SM-A3560, SM-A356W, SM-A356U, SM-A356U1, SM-S356V, SM-A356N", support: "YES"},
+            {model: "Galaxy A52", variant: "SM-A525F, SM-A525M", support: "YES"},
+            {model: "Galaxy A52 5G", variant: "SM-A526B, SM-A5260, SM-A526U, SM-A526U1, SM-A526W, SC-53B", support: "YES"},
+            {model: "Galaxy A52s 5G", variant: "SM-A528B, SM-A528N", support: "YES"},
+            {model: "Galaxy A53 5G", variant: "SM-A536B, SM-A536E, SM-A5360, SM-A536W, SM-A536N, SCG15, SC-53C, SM-A536U, SM-A536V, SM-S536DL, SM-A536U1", support: "YES"},
+            {model: "Galaxy A54 5G", variant: "SM-A546B, SM-A5460, SC-53D, SM-A546W, SM-A546S, SM-A546E, SCG21, SM-E546B, SM-A546V, SM-A546U1, SM-A546U, SM-S546VL", support: "YES"},
+            {model: "Galaxy A55 5G", variant: "SM-A556B, SM-A556E, SM-A5560, SC-53E, SCG27, SM-A556S", support: "YES"},
+            {model: "Galaxy A72", variant: "SM-A725M, SM-A725F", support: "YES"},
+            {model: "Galaxy A73 5G", variant: "SM-A736B", support: "YES"},
+            {model: "Galaxy A82 5G", variant: "SM-A826S", support: "YES"},
+            {model: "Galaxy C55 5G", variant: "SM-C5560", support: "YES"},
+            {model: "Galaxy F13", variant: "SM-E135F", support: "YES"},
+            {model: "Galaxy F14 5G", variant: "SM-E146B", support: "YES"},
+            {model: "Galaxy F15 5G", variant: "SM-E156B", support: "YES"},
+            {model: "Galaxy F34 5G", variant: "SM-E346B", support: "YES"},
+            {model: "Galaxy F55 5G", variant: "SM-E556B", support: "YES"},
+            {model: "Galaxy M13", variant: "SM-M135F, SM-M135FU, SM-M135M", support: "YES"},
+            {model: "Galaxy M13 5G", variant: "SM-M136B", support: "YES"},
+            {model: "Galaxy M14 5G", variant: "SM-M146B", support: "YES"},
+            {model: "Galaxy M15 5G", variant: "SM-M156B, SM-M156S", support: "YES"},
+            {model: "Galaxy M23 5G", variant: "SM-E236B, SM-M236B, SM-M236L, SM-M236Q", support: "YES"},
+            {model: "Galaxy M33 5G", variant: "SM-M336B, SM-M336BU, SM-M336K", support: "YES"},
+            {model: "Galaxy M34 5G", variant: "SM-M346B, SM-M346B2, SM-M346B1", support: "YES"},
+            {model: "Galaxy M35 5G", variant: "SM-M356B", support: "YES"},
+            {model: "Galaxy M44 5G", variant: "SM-M446K", support: "YES"},
+            {model: "Galaxy M53 5G", variant: "SM-M536B, SM-M536S", support: "YES"},
+            {model: "Galaxy M54 5G", variant: "SM-M546B", support: "YES"},
+            {model: "Galaxy M55 5G", variant: "SM-M556B, SM-M556E", support: "YES"},
+            {model: "Galaxy M55s 5G", variant: "SM-M558B", support: "YES"},
+            {model: "Galaxy S21 5G", variant: "SM-G991W, SM-G991B, SM-G991N, SM-G9910, SCG09, SM-G991U, SM-G991U1, SC-51B", support: "YES"},
+            {model: "Galaxy S21 FE 5G", variant: "SM-G990B, SM-G990W2, SM-G990W, SM-G9900, SM-G990B2, SM-G990E, SM-G990U, SM-G990U2, SM-G990U1, SM-G990U3", support: "YES"},
+            {model: "Galaxy S21 Ultra 5G", variant: "SM-G998W, SM-G998B, SM-G998N, SM-G9980, SM-G998U, SM-G998U1, SC-52B", support: "YES"},
+            {model: "Galaxy S21+ 5G", variant: "SM-G996W, SM-G996B, SM-G996N, SM-G9960, SCG10, SM-G996U, SM-G996U1", support: "YES"},
+            {model: "Galaxy S22", variant: "SM-S901B, SM-S901W, SM-S901N, SC-51C, SCG13, SM-S901E, SM-S901U, SM-S901U1, SM-S9010", support: "YES"},
+            {model: "Galaxy S22 Ultra", variant: "SM-S908B, SM-S908W, SC-52C, SM-S908N, SM-S908E, SM-S908U, SM-S908U1, SM-S9080, SCG14", support: "YES"},
+            {model: "Galaxy S22+", variant: "SM-S906B, SM-S906W, SM-S906N, SM-S906E, SM-S906U, SM-S906U1, SM-S9060", support: "YES"},
+            {model: "Galaxy S23", variant: "SM-S911BE, SM-S911B, SM-S911N, SM-S9110, SM-S911W, SM-S911U, SM-S911C, SC-51D, SCG19, SM-S911U1", support: "YES"},
+            {model: "Galaxy S23 FE", variant: "SM-S711B, SM-S711N, SM-S711BE, SM-S711U, SM-S7110, SM-S711W, SM-S711U1, SCG24", support: "YES"},
+            {model: "Galaxy S23 Ultra", variant: "SM-S918BE, SM-S918B, SM-S918N, SM-S918U1, SM-S9180, SM-S918W, SM-S918Q, SC-52D, SM-S918U, SCG20", support: "YES"},
+            {model: "Galaxy S23+", variant: "SM-S916B, SM-S916BE, SM-S916N, SM-S9160, SM-S916W, SM-S916U1, SM-S916U", support: "YES"},
+            {model: "Galaxy S24", variant: "SM-S921N, SM-S9210, SM-S921BE, SM-S921U1, SM-S921U, SM-S921W, SM-S921B, SM-S921Q, SC-51E, SCG25", support: "YES"},
+            {model: "Galaxy S24 FE", variant: "SM-S721U, SM-S721U1, SM-S7210, SM-S721B, SM-S721BE, SM-S721W, SM-S721N, SCG30, SM-S721Q", support: "YES"},
+            {model: "Galaxy S24 Ultra", variant: "SM-S928U, SM-S928B, SM-S928N, SM-S9280, SM-S928BE, SM-S928U1, SM-S928W, SM-S928Q, SCG26, SC-52E", support: "YES"},
+            {model: "Galaxy S24+", variant: "SM-S926U, SM-S926N, SM-S9260, SM-S926BE, SM-S926U1, SM-S926W, SM-S926B", support: "YES"},
+            {model: "Galaxy A01", variant: "SM-S111DL, SM-A015V, SM-A015U1, SM-A015U, SM-A015T1, SM-A015AZ, SM-A015A, SM-A015F, SM-A015G, SM-A015M", support: "NO"},
+            {model: "Galaxy A02", variant: "SM-M022G, SM-M022M, SM-A022G, SM-M022F, SM-A022F, SM-A022M", support: "NO"},
+            {model: "Galaxy A02s", variant: "SM-A025M, SM-M025F, SM-A025F, SM-A025G, SM-E025F, SM-A025U1, SM-A025V, SM-A025AZ, SM-A025U, SM-A025A, SM-S124DL", support: "NO"},
+            {model: "Galaxy A03", variant: "SM-A035F, SM-A035M, SM-A035G", support: "NO"},
+            {model: "Galaxy A03s", variant: "SM-A037F, SM-A037M, SM-A037G,SM-A037U,SM-A037U1,SM-A037W, SM-S134DL, SM-S135DL", support: "NO"},
+            {model: "Galaxy A04", variant: "SM-A045M, SM-A045F", support: "NO"},
+            {model: "Galaxy A04e", variant: "SM-A042M, SM-A042F", support: "NO"},
+            {model: "Galaxy A05", variant: "SM-A055M, SM-A055F", support: "NO"},
+            {model: "Galaxy A05s", variant: "SM-A057F, SM-A057G, SM-A057M", support: "NO"}
+            // Lista truncada para brevidade, adicione mais modelos conforme necessário
+        ];
+        
+        // Function to filter devices based on search input
+        function filterDevices() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const tableBody = document.getElementById('deviceTableBody');
+            const notFoundMessage = document.getElementById('notFoundMessage');
+            const itemCountEl = document.getElementById('itemCount');
+            
+            let matchCount = 0;
+            
+            // Clear the table first
+            tableBody.innerHTML = '';
+            
+            // Filter and add matching devices
+            deviceData.forEach(device => {
+                if (
+                    device.model.toLowerCase().includes(searchTerm) || 
+                    device.variant.toLowerCase().includes(searchTerm)
+                ) {
+                    matchCount++;
+                    
+                    const row = document.createElement('tr');
+                    
+                    const modelCell = document.createElement('td');
+                    modelCell.textContent = device.model;
+                    
+                    const variantCell = document.createElement('td');
+                    variantCell.textContent = device.variant;
+                    
+                    const supportCell = document.createElement('td');
+                    const supportStatus = document.createElement('span');
+                    supportStatus.classList.add('status');
+                    
+                    if (device.support === "YES") {
+                        supportStatus.classList.add('yes');
+                        supportStatus.textContent = "SIM";
+                        
+                        // Adicionar botão de pedido
+                        const orderButton = document.createElement('a');
+                        orderButton.href = `https://wa.me/5534991049663?text=Olá! Gostaria de fazer o desbloqueio FRP do modelo ${device.model} (${device.variant}). Sei que o serviço é feito em 1-10 min via IMEI.`;
+                        orderButton.target = '_blank';
+                        orderButton.classList.add('order-button');
+                        orderButton.innerHTML = '<i class="fab fa-whatsapp"></i> Fazer Pedido';
+                        
+                        supportCell.appendChild(supportStatus);
+                        supportCell.appendChild(orderButton);
+                    } else {
+                        supportStatus.classList.add('no');
+                        supportStatus.textContent = "NÃO";
+                        supportCell.appendChild(supportStatus);
+                    }
+                    
+                    row.appendChild(modelCell);
+                    row.appendChild(variantCell);
+                    row.appendChild(supportCell);
+                    
+                    tableBody.appendChild(row);
+                }
+            });
+            
+            // Update counter and show/hide messages
+            itemCountEl.textContent = matchCount;
+            
+            if (matchCount === 0) {
+                notFoundMessage.style.display = 'block';
+            } else {
+                notFoundMessage.style.display = 'none';
+            }
+        }
+        
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("DOM fully loaded");
+            
+            // Set up search input event listeners
+            const searchInput = document.getElementById('searchInput');
+            searchInput.addEventListener('input', filterDevices);
+            
+            // Set up WhatsApp button
+            const whatsappButton = document.getElementById('whatsappButton');
+            whatsappButton.addEventListener('click', function() {
+                window.open('https://wa.me/5534991049663?text=Oi%2C%20preciso%20do%20desbloqueio%20r%C3%A1pido%20(1-10min)%20do%20FRP%20do%20meu%20Samsung.%20J%C3%A1%20tenho%20o%20IMEI%20em%20m%C3%A3os%20para%20enviar!', '_blank');
+            });
+            
+            // Update total count
+            document.getElementById('totalCount').textContent = deviceData.length;
+            
+            // Show loading indicator
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            loadingIndicator.style.display = 'block';
+            
+            // Initial filtering to show all devices (with a small delay to show loading)
+            setTimeout(function() {
+                filterDevices();
+                loadingIndicator.style.display = 'none';
+            }, 500);
+        });
+    </script>
